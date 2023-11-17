@@ -140,7 +140,7 @@ macro_rules! tlbf {
         const _: () = {
             #[allow(non_upper_case_globals)]
             impl $flags_name {
-                $($vis const $name: Self = Self(1 << $value);)*
+                $($vis const $name: Self = Self(1 << ($value));)*
 
                 pub fn is_empty(&self) -> bool {
                     self.0 == 0
@@ -291,6 +291,12 @@ macro_rules! tyflags {
         $crate::Or<$first, $crate::type_join!($($expr),*)>
     };
 }
+
+tlbf!(
+    pub Color: u64 {
+        Red, Green, Blue,
+    }
+);
 
 #[cfg(test)]
 mod test {
