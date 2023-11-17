@@ -75,7 +75,7 @@ macro_rules! tlbf {
         }
     ) => {
         $crate::tlbf! (
-            $(#[$($flags_args: tt)*])*
+            $(#[$($flags_args)*])*
             $vis $flags_name: $repr {
                 $(
                     $(#[$($branch_args)*])*
@@ -115,7 +115,7 @@ macro_rules! tlbf {
     (
         $(#[$($flags_args: tt)*])*
         $vis: vis $flags_name: ident: $repr: ty {$(,)?}
-        {$($x: ident = $y: expr),*} ($value: expr)
+        {$($(#[$($a: tt)*])* $x: ident = $y: expr),*} ($value: expr)
     ) => {
         $crate::tlbf! (
             $(#[$($flags_args)*])*
@@ -300,6 +300,7 @@ tlbf!(
 
 #[cfg(test)]
 mod test {
+
     tlbf!(
         pub Unit1: u8 {
             Hello
@@ -315,6 +316,13 @@ mod test {
         tlbf!(
             Mascot: u8 {
                 Ferris
+            }
+        );
+        tlbf!(
+            #[derive(Default)]
+            LesserMascots: u8 {
+                #[repr(C)]
+                Gopher
             }
         );
     }
