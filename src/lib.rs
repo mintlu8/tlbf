@@ -1,4 +1,6 @@
 #![no_std]
+
+/// Type level combinator for bitflags.
 #[ghost::phantom]
 #[derive(Debug, Default)]
 pub struct Or<A, B>;
@@ -291,12 +293,6 @@ macro_rules! tyflags {
         $crate::Or<$first, $crate::type_join!($($expr),*)>
     };
 }
-
-tlbf!(
-    pub Color: u64 {
-        Red, Green, Blue,
-    }
-);
 
 #[cfg(test)]
 mod test {
