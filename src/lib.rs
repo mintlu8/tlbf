@@ -72,7 +72,7 @@ macro_rules! tlbf {
         $vis: vis $flags_name: ident: $repr: ty {
             $(
                 $(#[$($branch_args: tt)*])*
-                $name: ident
+                $vis2: vis $name: ident
             ),* $(,)?
         }
     ) => {
@@ -81,7 +81,7 @@ macro_rules! tlbf {
             $vis $flags_name: $repr {
                 $(
                     $(#[$($branch_args)*])*
-                    $name
+                    $vis2 $name
                 ),*
             }
             {} (0)
@@ -91,38 +91,38 @@ macro_rules! tlbf {
         $(#[$($flags_args: tt)*])*
         $vis: vis $flags_name: ident: $repr: ty {
             $(#[$($first_args: tt)*])*
-            $first: ident
+            $vis0: vis $first: ident
             $(  
                 ,$(#[$($branch_args: tt)*])*
-                $name: ident
+                $vis2: vis $name: ident
             )* $(,)?
         }
-        {$($(#[$($a: tt)*])* $x: ident = $y: expr),*} ($value: expr)
+        {$($(#[$($a: tt)*])* $v: vis $x: ident = $y: expr),*} ($value: expr)
     ) => {
         $crate::tlbf! (
             $(#[$($flags_args)*])*
             $vis $flags_name: $repr {
                 $(
                     $(#[$($branch_args)*])*
-                    $name
+                    $vis2 $name
                 ),*
             }
             {
-                $($(#[$($a)*])* $x = $y,)* 
+                $($(#[$($a)*])* $v $x = $y,)* 
                 $(#[$($first_args)*])*
-                $first = $value
+                $vis0 $first = $value
             } ($value + 1)
         );
     };
     (
         $(#[$($flags_args: tt)*])*
         $vis: vis $flags_name: ident: $repr: ty {$(,)?}
-        {$($(#[$($a: tt)*])* $x: ident = $y: expr),*} ($value: expr)
+        {$($(#[$($a: tt)*])* $vis2: vis $x: ident = $y: expr),*} ($value: expr)
     ) => {
         $crate::tlbf! (
             $(#[$($flags_args)*])*
             $vis $flags_name: $repr
-            {$($x = $y),*}
+            {$($vis2 $x = $y),*}
         );
     };
     (
@@ -130,7 +130,7 @@ macro_rules! tlbf {
         $vis: vis $flags_name: ident: $repr: ty {
             $(
                 $(#[$($branch_args: tt)*])*
-                $name: ident = $value: expr
+                $vis2: vis $name: ident = $value: expr
             ),* $(,)?
         }
     ) => {
@@ -218,7 +218,7 @@ macro_rules! tlbf {
         $(
             $(#[$($branch_args)*])*
             #[derive(Debug, Default, Clone, Copy, Eq, Hash)]
-            $vis struct $name;
+            $vis2 struct $name;
 
             const _: () = {
                 use $crate::SetMember;
@@ -270,13 +270,14 @@ macro_rules! tlbf {
     };
 }
 
+
 /// Join bitflags at the type level.
 /// 
 /// ```
 /// # use tlbf::*;
 /// # tlbf!(
 /// #     pub Color: u64 {
-/// #         Red, Green, Blue,
+/// #         pub Red, Green, Blue,
 /// #     }
 /// # );
 /// let flags = tyflags!(Red|Blue);
@@ -310,8 +311,8 @@ mod test {
     #[test]
     pub fn test(){
         tlbf!(
-            Mascot: u8 {
-                Ferris
+            pub Mascot: u8 {
+                pub Ferris
             }
         );
         tlbf!(
