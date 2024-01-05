@@ -160,7 +160,7 @@ macro_rules! tlbf {
                     self.0 & other.to_set().0 > 0
                 }
 
-                pub fn all() -> Self {
+                pub const fn all() -> Self {
                     $(Self::$name)|*
                 }
             }
