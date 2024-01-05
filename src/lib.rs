@@ -161,7 +161,7 @@ macro_rules! tlbf {
                 }
 
                 pub const fn all() -> Self {
-                    $(Self::$name)|*
+                    Self($(Self::$name.0)|*)
                 }
             }
 
@@ -327,5 +327,14 @@ mod test {
             }
         );
         assert_eq!(Mascot::all(), Mascot::Ferris);
+
+        tlbf!(
+            pub Colors: u8 {
+                pub Red,
+                pub Blue,
+                pub Green,
+            }
+        );
+        assert_eq!(Colors::all(), Colors::Red|Colors::Blue|Colors::Green);
     }
 }
