@@ -159,6 +159,10 @@ macro_rules! tlbf {
                 pub fn intersects(&self, other: impl $crate::SetMember<Set=Self>) -> bool {
                     self.0 & other.to_set().0 > 0
                 }
+
+                pub fn all() -> Self {
+                    $(Self::$name)|*
+                }
             }
 
             impl $crate::SetMember for $flags_name {
@@ -322,5 +326,6 @@ mod test {
                 Gopher
             }
         );
+        assert_eq!(Mascot::all(), Mascot::Ferris);
     }
 }
